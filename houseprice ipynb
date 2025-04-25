@@ -1,0 +1,1573 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "fe92cb59-75dc-41a3-bc29-2e647e8ade33",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "import sklearn\n",
+    "import seaborn as sns\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "fca21a3a-c0bd-46ba-bf66-e1ce0bfcde84",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>0</th>\n",
+       "      <th>1</th>\n",
+       "      <th>2</th>\n",
+       "      <th>3</th>\n",
+       "      <th>4</th>\n",
+       "      <th>5</th>\n",
+       "      <th>6</th>\n",
+       "      <th>7</th>\n",
+       "      <th>8</th>\n",
+       "      <th>9</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>Id</th>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>3</td>\n",
+       "      <td>4</td>\n",
+       "      <td>5</td>\n",
+       "      <td>6</td>\n",
+       "      <td>7</td>\n",
+       "      <td>8</td>\n",
+       "      <td>9</td>\n",
+       "      <td>10</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>MSSubClass</th>\n",
+       "      <td>60</td>\n",
+       "      <td>20</td>\n",
+       "      <td>60</td>\n",
+       "      <td>70</td>\n",
+       "      <td>60</td>\n",
+       "      <td>50</td>\n",
+       "      <td>20</td>\n",
+       "      <td>60</td>\n",
+       "      <td>50</td>\n",
+       "      <td>190</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>MSZoning</th>\n",
+       "      <td>RL</td>\n",
+       "      <td>RL</td>\n",
+       "      <td>RL</td>\n",
+       "      <td>RL</td>\n",
+       "      <td>RL</td>\n",
+       "      <td>RL</td>\n",
+       "      <td>RL</td>\n",
+       "      <td>RL</td>\n",
+       "      <td>RM</td>\n",
+       "      <td>RL</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>LotFrontage</th>\n",
+       "      <td>65.0</td>\n",
+       "      <td>80.0</td>\n",
+       "      <td>68.0</td>\n",
+       "      <td>60.0</td>\n",
+       "      <td>84.0</td>\n",
+       "      <td>85.0</td>\n",
+       "      <td>75.0</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>51.0</td>\n",
+       "      <td>50.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>LotArea</th>\n",
+       "      <td>8450</td>\n",
+       "      <td>9600</td>\n",
+       "      <td>11250</td>\n",
+       "      <td>9550</td>\n",
+       "      <td>14260</td>\n",
+       "      <td>14115</td>\n",
+       "      <td>10084</td>\n",
+       "      <td>10382</td>\n",
+       "      <td>6120</td>\n",
+       "      <td>7420</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>...</th>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>MoSold</th>\n",
+       "      <td>2</td>\n",
+       "      <td>5</td>\n",
+       "      <td>9</td>\n",
+       "      <td>2</td>\n",
+       "      <td>12</td>\n",
+       "      <td>10</td>\n",
+       "      <td>8</td>\n",
+       "      <td>11</td>\n",
+       "      <td>4</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>YrSold</th>\n",
+       "      <td>2008</td>\n",
+       "      <td>2007</td>\n",
+       "      <td>2008</td>\n",
+       "      <td>2006</td>\n",
+       "      <td>2008</td>\n",
+       "      <td>2009</td>\n",
+       "      <td>2007</td>\n",
+       "      <td>2009</td>\n",
+       "      <td>2008</td>\n",
+       "      <td>2008</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>SaleType</th>\n",
+       "      <td>WD</td>\n",
+       "      <td>WD</td>\n",
+       "      <td>WD</td>\n",
+       "      <td>WD</td>\n",
+       "      <td>WD</td>\n",
+       "      <td>WD</td>\n",
+       "      <td>WD</td>\n",
+       "      <td>WD</td>\n",
+       "      <td>WD</td>\n",
+       "      <td>WD</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>SaleCondition</th>\n",
+       "      <td>Normal</td>\n",
+       "      <td>Normal</td>\n",
+       "      <td>Normal</td>\n",
+       "      <td>Abnorml</td>\n",
+       "      <td>Normal</td>\n",
+       "      <td>Normal</td>\n",
+       "      <td>Normal</td>\n",
+       "      <td>Normal</td>\n",
+       "      <td>Abnorml</td>\n",
+       "      <td>Normal</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>SalePrice</th>\n",
+       "      <td>208500</td>\n",
+       "      <td>181500</td>\n",
+       "      <td>223500</td>\n",
+       "      <td>140000</td>\n",
+       "      <td>250000</td>\n",
+       "      <td>143000</td>\n",
+       "      <td>307000</td>\n",
+       "      <td>200000</td>\n",
+       "      <td>129900</td>\n",
+       "      <td>118000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>81 rows × 10 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                    0       1       2        3       4       5       6  \\\n",
+       "Id                  1       2       3        4       5       6       7   \n",
+       "MSSubClass         60      20      60       70      60      50      20   \n",
+       "MSZoning           RL      RL      RL       RL      RL      RL      RL   \n",
+       "LotFrontage      65.0    80.0    68.0     60.0    84.0    85.0    75.0   \n",
+       "LotArea          8450    9600   11250     9550   14260   14115   10084   \n",
+       "...               ...     ...     ...      ...     ...     ...     ...   \n",
+       "MoSold              2       5       9        2      12      10       8   \n",
+       "YrSold           2008    2007    2008     2006    2008    2009    2007   \n",
+       "SaleType           WD      WD      WD       WD      WD      WD      WD   \n",
+       "SaleCondition  Normal  Normal  Normal  Abnorml  Normal  Normal  Normal   \n",
+       "SalePrice      208500  181500  223500   140000  250000  143000  307000   \n",
+       "\n",
+       "                    7        8       9  \n",
+       "Id                  8        9      10  \n",
+       "MSSubClass         60       50     190  \n",
+       "MSZoning           RL       RM      RL  \n",
+       "LotFrontage       NaN     51.0    50.0  \n",
+       "LotArea         10382     6120    7420  \n",
+       "...               ...      ...     ...  \n",
+       "MoSold             11        4       1  \n",
+       "YrSold           2009     2008    2008  \n",
+       "SaleType           WD       WD      WD  \n",
+       "SaleCondition  Normal  Abnorml  Normal  \n",
+       "SalePrice      200000   129900  118000  \n",
+       "\n",
+       "[81 rows x 10 columns]"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df=pd.read_csv(\"train.csv\")\n",
+    "df.head(10).T\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "3a9762d3-e77d-43a9-b65a-7aa8fa314196",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<bound method DataFrame.info of         Id  MSSubClass MSZoning  LotFrontage  LotArea Street Alley LotShape  \\\n",
+       "0        1          60       RL         65.0     8450   Pave   NaN      Reg   \n",
+       "1        2          20       RL         80.0     9600   Pave   NaN      Reg   \n",
+       "2        3          60       RL         68.0    11250   Pave   NaN      IR1   \n",
+       "3        4          70       RL         60.0     9550   Pave   NaN      IR1   \n",
+       "4        5          60       RL         84.0    14260   Pave   NaN      IR1   \n",
+       "...    ...         ...      ...          ...      ...    ...   ...      ...   \n",
+       "1455  1456          60       RL         62.0     7917   Pave   NaN      Reg   \n",
+       "1456  1457          20       RL         85.0    13175   Pave   NaN      Reg   \n",
+       "1457  1458          70       RL         66.0     9042   Pave   NaN      Reg   \n",
+       "1458  1459          20       RL         68.0     9717   Pave   NaN      Reg   \n",
+       "1459  1460          20       RL         75.0     9937   Pave   NaN      Reg   \n",
+       "\n",
+       "     LandContour Utilities  ... PoolArea PoolQC  Fence MiscFeature MiscVal  \\\n",
+       "0            Lvl    AllPub  ...        0    NaN    NaN         NaN       0   \n",
+       "1            Lvl    AllPub  ...        0    NaN    NaN         NaN       0   \n",
+       "2            Lvl    AllPub  ...        0    NaN    NaN         NaN       0   \n",
+       "3            Lvl    AllPub  ...        0    NaN    NaN         NaN       0   \n",
+       "4            Lvl    AllPub  ...        0    NaN    NaN         NaN       0   \n",
+       "...          ...       ...  ...      ...    ...    ...         ...     ...   \n",
+       "1455         Lvl    AllPub  ...        0    NaN    NaN         NaN       0   \n",
+       "1456         Lvl    AllPub  ...        0    NaN  MnPrv         NaN       0   \n",
+       "1457         Lvl    AllPub  ...        0    NaN  GdPrv        Shed    2500   \n",
+       "1458         Lvl    AllPub  ...        0    NaN    NaN         NaN       0   \n",
+       "1459         Lvl    AllPub  ...        0    NaN    NaN         NaN       0   \n",
+       "\n",
+       "     MoSold YrSold  SaleType  SaleCondition  SalePrice  \n",
+       "0         2   2008        WD         Normal     208500  \n",
+       "1         5   2007        WD         Normal     181500  \n",
+       "2         9   2008        WD         Normal     223500  \n",
+       "3         2   2006        WD        Abnorml     140000  \n",
+       "4        12   2008        WD         Normal     250000  \n",
+       "...     ...    ...       ...            ...        ...  \n",
+       "1455      8   2007        WD         Normal     175000  \n",
+       "1456      2   2010        WD         Normal     210000  \n",
+       "1457      5   2010        WD         Normal     266500  \n",
+       "1458      4   2010        WD         Normal     142125  \n",
+       "1459      6   2008        WD         Normal     147500  \n",
+       "\n",
+       "[1460 rows x 81 columns]>"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.info"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "4710564f-76c0-4427-905f-8cb4716ce1a8",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "iVBORw0KGgoAAAANSUhEUgAAA1IAAAIjCAYAAAAJLyrXAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjEwLjEsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvc2/+5QAAAAlwSFlzAAAPYQAAD2EBqD+naQAATs1JREFUeJzt3QucjHX///HPrnXYTY5LrHNyKtmkyJ2kkCiHUiqUVJRbJ7o7KEIU6aQk3aXQnUjdkVRKFCoUZaX/2pAcIqIcdx3WXv/H5/t7zNw7e5zv2pm5Zub1fDyGnZnrmvle13dmdt77/V6fK8ZxHEcAAAAAAH6L9X9RAAAAAIAiSAEAAACAJYIUAAAAAFgiSAEAAACAJYIUAAAAAFgiSAEAAACAJYIUAAAAAFgiSAEAAACAJYIUAAAAAFgiSAFAGBo1apTExMQE5bnatWtnLh5fffWVee73338/KM9/6623St26dcXNDh8+LHfccYdUq1bN7Jv7778/aM/t6Q/9PxTCoX8AIBAIUgAQYtOnTzdfhD2XMmXKSFJSknTq1EleeuklOXToULE8z86dO00AW7t2rbiNm9vmj6eeesr046BBg+Q///mP3Hzzzfkue/z4cXnxxRelefPmUq5cOalQoYKcc845MnDgQNmwYUPIX3sNGzaUu+++W3bv3h3UtgBAuIkLdQMAAP/niSeekHr16smJEyfkjz/+MCMMOrLx/PPPy/z586VZs2beZYcPHy6PPPKIdVgZPXq0GT0477zz/F7v888/l0ArqG2vv/66ZGVliZstWbJELrroIhk5cmShy/bs2VM+/fRTuemmm2TAgAGmvzVALViwQP7xj39I48aNJVSvvaNHj8rXX38tU6ZMkU8++UTWr18vCQkJBa4bDv0DAIFAkAIAl+jcubNccMEF3uvDhg0zX9Cvvvpq6datm6Smpkp8fLy5Ly4uzlwCKT093XyJLlWqlIRSyZIlxe327NkjZ599dqHLff/99yYwPfnkk/Loo4/63Pfyyy/L/v37JdSvPZ2iWLlyZRPgP/zwQxP48nLkyBE57bTTwqJ/ACAQmNoHAC52+eWXy4gRI2Tr1q3y9ttvF3iM1KJFi6RNmzZmqljZsmWlUaNG3i/rOrp14YUXmp/79+/vncqlU7uUHgPVtGlTWbNmjbRt29YEKM+6OY+R8jh58qRZRo8L0i/UGva2b9/us4yOMOkxNDllf8zC2pbXMTj6Jf6BBx6QWrVqSenSpc22Pvvss+I4js9y+jg6TW3evHlm+3RZnUa3cOFCvwPS7bffLmeccYaZ9pacnCwzZszIdXzSli1b5OOPP/a2/bfffsvz8TZv3mz+v/jii3PdV6JECRNgPLTP//nPf5pt0wCt911//fX5PnZOq1atkiuvvFLKly9v+vPSSy+Vb775xu/XndLt8vSBvqa0/V26dJHTTz9d+vTpk2//6AiVTl8899xzzX6rUqWKacvq1at9ltPXdIsWLcz2VapUSW688cZcryEAcCuCFAC4nOd4m4Km2P38889m5OrYsWNmmtZzzz1ngo3ni3OTJk3M7UqPxdHjePSioclj3759ZmRCp9ZNnDhRLrvssgLbpaMqGh4efvhhuffee02Q69Chg2RkZFhtnz9ty07Dkm7bCy+8YL6c68iJho0HH3xQhg4dmmt5naqmgUS/pE+YMMFMX9Ppdbq9BdHt0LCnbdHQ8Mwzz5hQosFBQ4Kn7Xp/YmKi2W+etmtwyEudOnXM/zNnzpTMzMxCR6++/fZb0249Vu6uu+6SxYsXmzbpaGFBdCRT99/BgwfNdEM9hktHuzQgfffdd1IYT+DLHuy0vXrcXtWqVU1o1X2YHw2fOi1Vg+7TTz9tpqFqoFq5cqXP6+eWW26RBg0amD7U5XX7tN2hGpkDACsOACCkpk2bpsMozvfff5/vMuXLl3eaN2/uvT5y5EizjscLL7xgrv/555/5PoY+vi6jz5fTpZdeau579dVX87xPLx5ffvmlWbZGjRrOwYMHvbfPmTPH3P7iiy96b6tTp47Tr1+/Qh+zoLbp+vo4HvPmzTPLjh071me56667zomJiXE2bdrkvU2XK1WqlM9tKSkp5vZJkyY5BZk4caJZ7u233/bedvz4cad169ZO2bJlfbZd23fVVVc5hcnKyvLu6zPOOMO56aabnMmTJztbt27NtWx6enqu21asWGHWfeutt3L1h/7veY4GDRo4nTp1Mj9nf7x69eo5HTt2zPXa++KLL8xrZ/v27c7s2bOdypUrO/Hx8c6OHTu8faDLPfLII4X2z5IlS8yy9957b57br3777TenRIkSzpNPPulz/08//eTExcXluh0A3IgRKQAIAzqtqqDqfTqdT+kxLUU98F+nvenUOn/paIJO8fK47rrrpHr16qZIQSDp4+s0OB0Fy06n+ml20kIO2ekoWf369b3XtWiHVsv79ddfC30enbaY/RghPR5In1fLnS9dutS67Trt77PPPpOxY8dKxYoVZdasWTJ48GAzUnXDDTf4jMR4jodTWpBCR9DOOuss09c//PBDvs+hlQ83btwovXv3Nuvs3bvXXHQ6ZPv27WXZsmW5XiO6j3QUTUeQdARMX29z586VGjVq+CynVQkL89///tdsZ16FNzzTUT/44APThl69ennbpxfd3zpC9eWXXxb6PAAQahSbAIAwoF/cdUpVfvRL+NSpU02hAJ1GpV+Yr732WhNuYmP9+5uZfmm2KSyhX3hzfknWL/r+HsNTVHrskJaHzx7iPNPsPPdnV7t27VyPoSHm77//LvR5dBtz7r/8nscmsD722GPmsmvXLhPIdKrgnDlzTFDzHAunUwvHjRsn06ZNk99//93n+K8DBw7k+/gaolS/fv3yXUbX133gMXnyZFP2XAuY6PFgOlUy53brfTVr1vRrWqD2jx7zVFAbdXtyvoY8KGABIBwQpADA5Xbs2GG++GpIyY+OXuhIg/4lX49b0mIK7777rjkmRo+t0hGcwmQfASku+Z00WAtV+NOm4pDf8+QsTBEKOoKnI0B6vJEWwdAwpUU2NLTcc889JkTpsUOtW7c2x2fp/tTlCxp19Nynx3TlV+ZeR5yya9mypU/FyPwCoL+hvDDaRt0WHT3Mq39ytg8A3IggBQAup8ULlB7oXxD9kqsjUXrRg/e1wICOemi40qlb+YWaovKMfGQPJps2bfI535WOeuRVOEBHc84880zvdZu26TS4L774wkx1zD4q5TmZraegw6nSx1m3bp350p89QBT383hGYHS/6T71THF7//33zaiSFg7x0EIZhRVi8Exj1OmL2u/Bps+v0xf/+uuvfEeldBl9vei5q3QkDADCEcdIAYCLafW1MWPGmC+cnnLTedEvrTl5RiO0kp/SEuWquCqivfXWWz7HbekXf52qppX/sn9h1kptx48f996m51HKWeLapm1afltHtPS8S9lpFT8NZNmf/1To8+iJkXVkL3vlukmTJpkREy0nbkuD0rZt23Ldrtu9YsUKEzw9Ff90pCbnqJk+t257QbScuO53raynU0Jz+vPPPyWQdHRN260nWM7Jsz067VS3T5fJuY16vbCKigDgBoxIAYBL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v4wdO1YaNGhggtWIESPM83qOo2rSpIlceeWVMmDAAFMiXYc67777blOIgop9AAAAAFwTpLQUeXFV51u9erVcdtll3uue45b69esn06dPl4ceesica0rPC6UjT23atDHlzsuUKeNdR08KrOGpffv2ZopSz549zbmnAAAAAMA1QUor3hWXdu3amfNF5UcD2xNPPGEu+dHRK622BwAAAADB4vcxUjoypOXEa9SoIVWqVDHT5/7888/Atg4AAAAAwjlI6fFJ//nPf+Tqq682ddW1qINOuQMAAACAaOP31D49We60adPk+uuvN9dvueUWueiii0y58bg46xmCAAAAABD5I1I7duyQiy++2Hu9RYsWpsb6zp07A9U2AAAAAAjvIKXnZsp5ciodiQrGyXkBAAAAwE38npOn1fW0xHj2aXzp6enStWtXKVWqVJHOIwUAAAAAER2kRo4cmec5pQAAAAAg2pxSkAIAAACAaOT3MVIAAAAAgP9DkAIAAAAASwQpAAAAALBEkAIAAACAYAapo0ePnsrqAAAAABAdQUpPzDtmzBipUaOGlC1bVn799Vdz+4gRI+SNN94IRBsBAAAAILyD1NixY2X69OkyYcIEnxPxNm3aVKZOnVrc7QMAAACA8A9Sb731lrz22mvSp08fKVGihPf25ORk2bBhQ3G3DwAAAADCP0j9/vvvctZZZ+U55e/EiRPF1S4AAAAAiJwgdfbZZ8vy5ctz3f7+++9L8+bNi6tdAAAAAOBacbYrPP7449KvXz8zMqWjUB988IGkpaWZKX8LFiwITCsBAAAAIJxHpLp37y4fffSRfPHFF3LaaaeZYJWammpu69ixY2BaCQAAAADhPCKlLrnkElm0aFHxtwYAAAAAIv2EvAAAAAAQjfwakapYsaLExMT49YB//fXXqbYJAAAAAMI/SE2cODHwLQEAAACASApSWqUPAAAAAHAKxSY8jh49KsePH/e5rVy5cqfykAAAAAAQecUmjhw5InfffbdUrVrVlD/X46eyXwAAAAAg0lkHqYceekiWLFkiU6ZMkdKlS8vUqVNl9OjRkpSUZE7KCwAAAACRznpqn554VwNTu3btpH///uacUmeddZbUqVNHZs6cKX369AlMSwEAAAAgXEektLz5mWee6T0eylPuvE2bNrJs2bLibyEAAAAAhHuQ0hC1ZcsW83Pjxo1lzpw5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0GqPzty5c33uHz9+vFO+fHln3rx5TkpKitOtWzenXr16TkZGhneZK6+80klOTnZWrlzpLF++3DnrrLOcm266yXv/gQMHnDPOOMPp06ePs379emfWrFlOfHy88+9//9u7zDfffOOUKFHCmTBhgvP//t//c4YPH+6ULFnS+emnn6zaEo46derkTJs2zeybtWvXOl26dHFq167tHD582LvMXXfd5dSqVctZvHixs3r1aueiiy5y/vGPf3jvz8zMdJo2bep06NDB+fHHH02/JiYmOsOGDfMu8+uvvzoJCQnO0KFDzT6eNGmS2ecLFy60ev8U1pZwNX/+fOfjjz92fvnlFyctLc159NFHzWtQ+0XRB8H33XffOXXr1nWaNWvm3Hfffd7b6YvAGzlypHPOOec4u3bt8l7+/PNP7/30QeD99ddfTp06dZxbb73VWbVqldlfn332mbNp0ybvMvyODrw9e/b4vA8WLVpkvi99+eWX5n7eC5El6oNUy5YtncGDB3uvnzx50klKSnLGjRsX0naFg5xBKisry6lWrZrzzDPPeG/bv3+/U7p0afNBq/QNr+t9//333mU+/fRTJyYmxvn999/N9VdeecWpWLGic+zYMe8yDz/8sNOoUSPv9V69ejlXXXWVT3tatWrl3HnnnX63JVLoh7bu06VLl3q3U39hvffee95lUlNTzTIrVqww1/WDOTY21vnjjz+8y0yZMsUpV66cd78/9NBD5otRdjfccIMJcv6+f/xpSyTR1+3UqVPpgxA4dOiQ06BBA/Ol5dJLL/UGKfoieEFKv3znhT4IDv092aZNm3zv53d0aOhnUf369c02816IPFE9te/48eOyZs0aM5zsERsba66vWLEipG0LR1u2bDEnRM6+P8uXL2+Gkz37U//XqQIXXHCBdxldXvf7qlWrvMu0bdtWSpUq5V2mU6dOZvra33//7V0m+/N4lvE8jz9tiRQHDhww/1eqVMn8r6/pEydO+Gy7Tq+oXbu2Tz/oVIvsJ63W/Xfw4EH5+eef/drH/rx//GlLJDh58qTMnj1bjhw5Yqb40QfBp9NTdCpMzv1FXwSPTsvSad9nnnmmmRqm05MUfRAc8+fPN79br7/+ejMdrHnz5vL666977+d3dPDpa/Ltt9+W2267zUzv470QeaI6SO3du9d8Acr+YlV6Xd/gsOPZZwXtT/1fP+Czi4uLMyEg+zJ5PUb258hvmez3F9aWSJCVlWWOBbn44ouladOm5jbdPv0Fp78MC9o/Rd3H+mGekZHh1/vHn7aEs59++snMK9c56nfddZfMnTtXzj77bPogyDTE/vDDD+b4wZzoi+DQL8B6jMbChQvN8YP6RVmPoTl06BB9ECS//vqr2fcNGjSQzz77TAYNGiT33nuvzJgxw9zP7+jg0+PI9+/fL7feequ5znsh8sSFugEATu2v8OvXr5evv/461E2JSo0aNZK1a9eaUcH3339f+vXrJ0uXLg11s6LK9u3b5b777pNFixaZA6oRGp07d/b+rEVYNFjVqVNH5syZYwoJIDh/WNORpKeeespc1xEp/f3w6quvms8mBN8bb7xh3hs6UovIFNUjUomJiVKiRIlcFUr0erVq1ULWrnDl2WcF7U/9f8+ePT73ayUarRKUfZm8HiP7c+S3TPb7C2tLuLv77rtlwYIF8uWXX0rNmjW9t+v26bC+/hWsoP1T1H2slZz0i5E/7x9/2hLO9K95Wi2pRYsWZjQkOTlZXnzxRfogiHR6in6maPUq/cu5XjTMvvTSS+Zn/esqfRF8+lfuhg0byqZNm3g/BIlWv9MR8eyaNGninWLJ7+jg2rp1q3zxxRdyxx13eG/jvRB5ojpI6Zcg/QK0ePFin7/o6HU9zgF26tWrZ9582fenDjPrvGrP/tT/9U2rX348lixZYva7/gXTs4yWWde5ux7612b963/FihW9y2R/Hs8ynufxpy3hSut8aIjSaWS673Rbs9PXdMmSJX22Xeeu6y/T7P2g09Ky/8LU/acfwp5fxIXtY3/eP/60JZLo9h87dow+CKL27dub/agjg56L/lVej9Hx/ExfBJ+Wy968ebP5cs/7ITh0infOU2H88ssvZmRQ8Ts6uKZNm2amSeqxmx68FyKQE+W0PKRWiZk+fbqpVjNw4EBTHjJ7tRT4VsbScpx60ZfP888/b37eunWrt5yp7r8PP/zQWbdundO9e/c8S6s2b97clGf9+uuvTaWt7KVVtZKMlla9+eabTWlV7SMt85mztGpcXJzz7LPPmiozWjEqr9KqhbUlHA0aNMiUjP3qq698Sqymp6f7lDTVkuhLliwxJU1bt25tLjnLq15xxRWmhLqWTK1SpUqe5VUffPBBs48nT56cZ3nVwt4/hbUlXD3yyCOmUuKWLVvM60uva2Wrzz//3NxPH4RO9qp9ir4IvAceeMB8Jun7QT+ftXSzlmzWqqKKPghO+X/9vfjkk086GzdudGbOnGn219tvv+1dht/RwaEV8vQ1ptUMc+K9EFmiPkgprb+vLyStt6/lIvXcCcibngdBA1TOS79+/cz9Wt5zxIgR5kNW38Dt27c359jJbt++feZDuWzZsqacZ//+/U1Ay07PKaFlXPUxatSoYT5wc5ozZ47TsGFD029aBlTP6ZOdP20JR3ntf73ouaU89BfRP//5T1OiVj9sr7nmGhO2svvtt9+czp07m/N/6Bce/SJ04sSJXP193nnnmX185pln+jyHv+8ff9oSjm677TZzzhbdbv0lp68vT4hS9IF7ghR9EXhaerl69epmu/UzW69nP38RfRAcH330kfkSrr/zGjdu7Lz22ms+9/M7Ojj0/F36ezmv7eG9EFli9J9Qj4oBAAAAQDiJ6mOkAAAAAKAoCFIAAAAAYIkgBQAAAACWCFIAAAAAYIkgBQAAAACWCFIAAAAAYIkgBQAAAACWCFIAAAAAYIkgBQBwld9++01iYmJk7dq14hYbNmyQiy66SMqUKSPnnXdeqJsDAHABghQAwMett95qgsz48eN9bp83b565PRqNHDlSTjvtNElLS5PFixfnu9969OiR6/avvvrK7Lf9+/cHoaUAgGAhSAEActGRl6efflr+/vtviRTHjx8v8rqbN2+WNm3aSJ06daRy5crF2i4AQHgiSAEAcunQoYNUq1ZNxo0bl+8yo0aNyjXNbeLEiVK3bt1cozRPPfWUnHHGGVKhQgV54oknJDMzUx588EGpVKmS1KxZU6ZNm5bndLp//OMfJtQ1bdpUli5d6nP/+vXrpXPnzlK2bFnz2DfffLPs3bvXe3+7du3k7rvvlvvvv18SExOlU6dOeW5HVlaWaZO2o3Tp0mabFi5c6L1fR5PWrFljltGfdbtP1X//+18555xzzPPp/nruued87tfn0RHA7HTfTZ8+3RsKdduqV69u9o8GvOx9paNfd9xxh1SpUkXKlSsnl19+uaSkpHjv158vu+wyOf300839LVq0kNWrV5/ydgFANCFIAQByKVGihAk/kyZNkh07dpzSYy1ZskR27twpy5Ytk+eff95Mk7v66qulYsWKsmrVKrnrrrvkzjvvzPU8GrQeeOAB+fHHH6V169bStWtX2bdvnzcoaDho3ry5CQAafHbv3i29evXyeYwZM2ZIqVKl5JtvvpFXX301z/a9+OKLJsg8++yzsm7dOhO4unXrJhs3bjT379q1y4QebYv+/K9//euU9oeGMm3njTfeKD/99JMJZiNGjPCGJH+89NJLMn/+fJkzZ46Zbjhz5kyfAHv99dfLnj175NNPPzXPd/7550v79u3lr7/+Mvf36dPHBMfvv//e3P/II49IyZIlT2m7ACDqOAAAZNOvXz+ne/fu5ueLLrrIue2228zPc+fOdbL/2hg5cqSTnJzss+4LL7zg1KlTx+ex9PrJkye9tzVq1Mi55JJLvNczMzOd0047zZk1a5a5vmXLFvM848eP9y5z4sQJp2bNms7TTz9tro8ZM8a54oorfJ57+/btZr20tDRz/dJLL3WaN29e6PYmJSU5Tz75pM9tF154ofPPf/7Te123U7e3ILqtJUqUMNuS/VKmTBnTrr///tss17t3b6djx44+6z744IPO2Wef7b2uy+v+zq58+fLOtGnTzM/33HOPc/nllztZWVm52rF8+XKnXLlyztGjR31ur1+/vvPvf//b/Hz66ac706dPL3TfAADyx4gUACBfepyUjuqkpqYW+TF0NCc29n+/bnQa3rnnnusz+qXHHekISnY6CuURFxcnF1xwgbcdOjXtyy+/NNP6PJfGjRt7j2fy0ClrBTl48KAZLbv44ot9btfrRdlmnS6n1QazX6ZOneqzjD5uXs+nI2AnT57063l0yqQ+dqNGjeTee++Vzz//3Huf7pvDhw+bfZp9/2zZssW7b4YOHWqm/ukUTi0qkn2fAQD8E+fncgCAKNS2bVsz1W3YsGHmy3t2Go7+b/Dkf06cOJHrMXJOGdPjf/K6TY9V8pcGBZ3qp0EvJz1uyEMr7QWTPt9ZZ53lc1tRpkbq/iho3+pUPQ1GOnXviy++MFMFNRS9//77Zt/oPtBqgTnpcVZKpxP27t1bPv74Y/MYOt1y9uzZcs0111i3FQCiFUEKAFAgHbHQAgw6+pGdFjL4448/zBd+T1n04jz308qVK02QU1qcQo/l0QILniChBRv0uCAdrSoqLbSQlJRkjqG69NJLvbfr9ZYtW0ogNGnSxDx+dnq9YcOGZnTOs2/1eCwPHa1KT0/P1fYbbrjBXK677jq58sorzTFQum+0X3S/ZD9uKid9Pr0MGTJEbrrpJlPwgyAFAP5jah8AoEA6DU+LE2iBg+y0Kt6ff/4pEyZMMFPDJk+ebEY3ios+3ty5c031vsGDB5tS7Lfddpu5T69raNAAoAUT9Pk/++wz6d+/v9/T47IXtdCRrXfffdcUbtDCCxoI77vvPgkELVqh56IaM2aM/PLLL2bq5Msvv+xTxEILaehtWmhDi2loQY7so3hatGPWrFlm3+hjvPfee6bKoo446ciUTovUaok65U9PcPztt9/KY489Zh4rIyPDBFIdsdq6dasJcboPNeABAPxHkAIAFEpLf+eceqdfvF955RUTeJKTk+W777475Yp2OUfC9KKP/fXXX5sqdVrGXHlGkTQ0XXHFFSbsaZlzDRLZj8fyhx5jpMcMacDRx9EKgPpcDRo0kEDQESOttqdT6bSs++OPP272b/apk1pFsFatWnLJJZeYKXi6XxMSErz3a9lyDbB63NiFF15owtInn3xitl1HB/VnHc3TYKmjTlohUEOTHp+mo15a/fCWW24x9+m0QC0jP3r06IBsLwBEqhitOBHqRgAAAABAOGFECgAAAAAsEaQAAAAAwBJBCgAAAAAsEaQAAAAAwBJBCgAAAAAsEaQAAAAAwBJBCgAAAAAsEaQAAAAAwBJBCgAAAAAsEaQAAAAAwBJBCgAAAADEzv8HWMJkxIzfffcAAAAASUVORK5CYII=",
+      "text/plain": [
+       "<Figure size 1000x600 with 1 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "\n",
+    "plt.figure(figsize=(10, 6))\n",
+    "plt.hist(df['SalePrice'], bins=50, color='skyblue', edgecolor='black')\n",
+    "plt.title('Distribution of SalePrice')\n",
+    "plt.xlabel('Number of Houses')\n",
+    "plt.ylabel('Sale Price')        # This is the correct label for the x-axis\n",
+    "  # This is the count of houses per price bin\n",
+    "plt.grid(True)\n",
+    "plt.show()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 59,
+   "id": "6539f1bc-d987-4a78-a4e3-e041eb4d75f6",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Id               0\n",
+       "MSSubClass       0\n",
+       "MSZoning         0\n",
+       "LotFrontage      0\n",
+       "LotArea          0\n",
+       "                ..\n",
+       "MoSold           0\n",
+       "YrSold           0\n",
+       "SaleType         0\n",
+       "SaleCondition    0\n",
+       "SalePrice        0\n",
+       "Length: 80, dtype: int64"
+      ]
+     },
+     "execution_count": 59,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.isna().sum().T"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 60,
+   "id": "5bd8905a-bda7-43f2-9829-d575fb2ff61e",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "LotFrontage\n",
+       "60.0     152\n",
+       "80.0     112\n",
+       "70.0      94\n",
+       "65.0      74\n",
+       "73.0      70\n",
+       "        ... \n",
+       "138.0      1\n",
+       "152.0      1\n",
+       "88.5       1\n",
+       "153.0      1\n",
+       "46.0       1\n",
+       "Name: count, Length: 115, dtype: int64"
+      ]
+     },
+     "execution_count": 60,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df[\"LotFrontage\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 61,
+   "id": "532fc6ac-16a7-442e-a7ae-19782f75a6bd",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Series([], dtype: int64)"
+      ]
+     },
+     "execution_count": 61,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "missing = df.isna().sum().sort_values(ascending=False)\n",
+    "missing = missing[missing > 0]\n",
+    "missing\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 62,
+   "id": "ca90295b-3334-49f9-83c7-df80fffc2f70",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "KeyError",
+     "evalue": "'PoolQC'",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mKeyError\u001b[0m                                  Traceback (most recent call last)",
+      "File \u001b[1;32m~\\miniconda3\\Lib\\site-packages\\pandas\\core\\indexes\\base.py:3805\u001b[0m, in \u001b[0;36mIndex.get_loc\u001b[1;34m(self, key)\u001b[0m\n\u001b[0;32m   3804\u001b[0m \u001b[38;5;28;01mtry\u001b[39;00m:\n\u001b[1;32m-> 3805\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_engine\u001b[38;5;241m.\u001b[39mget_loc(casted_key)\n\u001b[0;32m   3806\u001b[0m \u001b[38;5;28;01mexcept\u001b[39;00m \u001b[38;5;167;01mKeyError\u001b[39;00m \u001b[38;5;28;01mas\u001b[39;00m err:\n",
+      "File \u001b[1;32mindex.pyx:167\u001b[0m, in \u001b[0;36mpandas._libs.index.IndexEngine.get_loc\u001b[1;34m()\u001b[0m\n",
+      "File \u001b[1;32mindex.pyx:196\u001b[0m, in \u001b[0;36mpandas._libs.index.IndexEngine.get_loc\u001b[1;34m()\u001b[0m\n",
+      "File \u001b[1;32mpandas\\\\_libs\\\\hashtable_class_helper.pxi:7081\u001b[0m, in \u001b[0;36mpandas._libs.hashtable.PyObjectHashTable.get_item\u001b[1;34m()\u001b[0m\n",
+      "File \u001b[1;32mpandas\\\\_libs\\\\hashtable_class_helper.pxi:7089\u001b[0m, in \u001b[0;36mpandas._libs.hashtable.PyObjectHashTable.get_item\u001b[1;34m()\u001b[0m\n",
+      "\u001b[1;31mKeyError\u001b[0m: 'PoolQC'",
+      "\nThe above exception was the direct cause of the following exception:\n",
+      "\u001b[1;31mKeyError\u001b[0m                                  Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[62], line 1\u001b[0m\n\u001b[1;32m----> 1\u001b[0m df[\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mPoolQC\u001b[39m\u001b[38;5;124m\"\u001b[39m]\u001b[38;5;241m.\u001b[39mvalue_counts()\n",
+      "File \u001b[1;32m~\\miniconda3\\Lib\\site-packages\\pandas\\core\\frame.py:4102\u001b[0m, in \u001b[0;36mDataFrame.__getitem__\u001b[1;34m(self, key)\u001b[0m\n\u001b[0;32m   4100\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mcolumns\u001b[38;5;241m.\u001b[39mnlevels \u001b[38;5;241m>\u001b[39m \u001b[38;5;241m1\u001b[39m:\n\u001b[0;32m   4101\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_getitem_multilevel(key)\n\u001b[1;32m-> 4102\u001b[0m indexer \u001b[38;5;241m=\u001b[39m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mcolumns\u001b[38;5;241m.\u001b[39mget_loc(key)\n\u001b[0;32m   4103\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m is_integer(indexer):\n\u001b[0;32m   4104\u001b[0m     indexer \u001b[38;5;241m=\u001b[39m [indexer]\n",
+      "File \u001b[1;32m~\\miniconda3\\Lib\\site-packages\\pandas\\core\\indexes\\base.py:3812\u001b[0m, in \u001b[0;36mIndex.get_loc\u001b[1;34m(self, key)\u001b[0m\n\u001b[0;32m   3807\u001b[0m     \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;28misinstance\u001b[39m(casted_key, \u001b[38;5;28mslice\u001b[39m) \u001b[38;5;129;01mor\u001b[39;00m (\n\u001b[0;32m   3808\u001b[0m         \u001b[38;5;28misinstance\u001b[39m(casted_key, abc\u001b[38;5;241m.\u001b[39mIterable)\n\u001b[0;32m   3809\u001b[0m         \u001b[38;5;129;01mand\u001b[39;00m \u001b[38;5;28many\u001b[39m(\u001b[38;5;28misinstance\u001b[39m(x, \u001b[38;5;28mslice\u001b[39m) \u001b[38;5;28;01mfor\u001b[39;00m x \u001b[38;5;129;01min\u001b[39;00m casted_key)\n\u001b[0;32m   3810\u001b[0m     ):\n\u001b[0;32m   3811\u001b[0m         \u001b[38;5;28;01mraise\u001b[39;00m InvalidIndexError(key)\n\u001b[1;32m-> 3812\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mKeyError\u001b[39;00m(key) \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01merr\u001b[39;00m\n\u001b[0;32m   3813\u001b[0m \u001b[38;5;28;01mexcept\u001b[39;00m \u001b[38;5;167;01mTypeError\u001b[39;00m:\n\u001b[0;32m   3814\u001b[0m     \u001b[38;5;66;03m# If we have a listlike key, _check_indexing_error will raise\u001b[39;00m\n\u001b[0;32m   3815\u001b[0m     \u001b[38;5;66;03m#  InvalidIndexError. Otherwise we fall through and re-raise\u001b[39;00m\n\u001b[0;32m   3816\u001b[0m     \u001b[38;5;66;03m#  the TypeError.\u001b[39;00m\n\u001b[0;32m   3817\u001b[0m     \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_check_indexing_error(key)\n",
+      "\u001b[1;31mKeyError\u001b[0m: 'PoolQC'"
+     ]
+    }
+   ],
+   "source": [
+    "df[\"PoolQC\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "762dc24f-dfb5-41bf-81f1-d13430a3c9b9",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df=df.drop(\"PoolQC\",axis=1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d7db0a8c-1f70-49d8-89a0-a3536bfa42fe",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "missing"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6acd06b6-2e44-4cd4-809e-50a9968be539",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"MiscFeature\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "835467ed-be7d-42d3-95d6-29fb7bf06d9c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"MiscFeature\"]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5ca06c94-268b-4502-ba5d-bac59f0379b4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"MiscFeature\"] = df[\"MiscFeature\"].fillna(\"None\")\n",
+    "df[\"MiscFeature\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9ed07326-c47d-4f08-875f-22520612cfbf",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "missing = df.isna().sum().sort_values(ascending=False)\n",
+    "missing = missing[missing > 0]\n",
+    "missing\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6df1db89-cfee-41f8-b093-e49537f9d710",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"Electrical\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8e2dce41-f6ae-4c77-af8b-0d7cffabd5b0",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"Electrical\"] = df[\"Electrical\"].fillna(\"SBrkr \")\n",
+    "df[\"Electrical\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e7d4abc2-3042-4384-ab2f-a0bacc5c432d",
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "543bde96-5823-4a54-85d1-f781f908350b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"MasVnrArea\"] = df[\"MasVnrArea\"].fillna(0)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "26c84b78-0490-4cad-ac22-ad9fc3438101",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "MasVnrArea\n",
+       "0.0      869\n",
+       "108.0      8\n",
+       "72.0       8\n",
+       "180.0      8\n",
+       "16.0       7\n",
+       "        ... \n",
+       "426.0      1\n",
+       "96.0       1\n",
+       "438.0      1\n",
+       "194.0      1\n",
+       "119.0      1\n",
+       "Name: count, Length: 327, dtype: int64"
+      ]
+     },
+     "execution_count": 17,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df[\"MasVnrArea\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b6ef20ff-a387-4d25-9a14-e4d63af0ed14",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "4b990c4e-71ff-42d3-ab78-ddddcfd1b277",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"MasVnrType\"] = df[\"MasVnrType\"].fillna(\"None\")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "7057905a-1383-45c1-bc55-73d3d4e83bf8",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "MasVnrType\n",
+       "None       872\n",
+       "BrkFace    445\n",
+       "Stone      128\n",
+       "BrkCmn      15\n",
+       "Name: count, dtype: int64"
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df[\"MasVnrType\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "2ae64ed5-84b6-41ac-9edc-31f2de2257d9",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Alley           1369\n",
+       "Fence           1179\n",
+       "FireplaceQu      690\n",
+       "LotFrontage      259\n",
+       "GarageCond        81\n",
+       "GarageFinish      81\n",
+       "GarageType        81\n",
+       "GarageYrBlt       81\n",
+       "GarageQual        81\n",
+       "BsmtFinType2      38\n",
+       "BsmtExposure      38\n",
+       "BsmtFinType1      37\n",
+       "BsmtQual          37\n",
+       "BsmtCond          37\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "missing = df.isna().sum().sort_values(ascending=False)\n",
+    "missing = missing[missing > 0]\n",
+    "missing\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "7b0fb660-9cff-4f4a-b311-67782a188ee0",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Alley\n",
+       "Grvl    50\n",
+       "Pave    41\n",
+       "Name: count, dtype: int64"
+      ]
+     },
+     "execution_count": 21,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df[\"Alley\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "2e56e4a8-f838-4dc1-be4b-4c4c47a58a43",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Alley\n",
+       "NA      1369\n",
+       "Grvl      50\n",
+       "Pave      41\n",
+       "Name: count, dtype: int64"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df[\"Alley\"] = df[\"Alley\"].fillna(\"NA\")\n",
+    "\n",
+    "df[\"Alley\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "573c90b7-7231-4dac-a98f-69203919fd57",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "160322df-582a-4756-b269-600a2ce1f87f",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Fence\n",
+       "MnPrv    157\n",
+       "GdPrv     59\n",
+       "GdWo      54\n",
+       "MnWw      11\n",
+       "Name: count, dtype: int64"
+      ]
+     },
+     "execution_count": 23,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df[\"Fence\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "50acae0d-3d4d-4fb9-9e97-24b52e81f2cd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"Fence\"] = df[\"Fence\"].fillna(\"NA\")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "07fb4283-d502-4126-a676-4d7fa38b3c9c",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Fence\n",
+       "NA       1179\n",
+       "MnPrv     157\n",
+       "GdPrv      59\n",
+       "GdWo       54\n",
+       "MnWw       11\n",
+       "Name: count, dtype: int64"
+      ]
+     },
+     "execution_count": 25,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df[\"Fence\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "d76053de-ef71-4fc6-9f0f-aa4965882bec",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "FireplaceQu     690\n",
+       "LotFrontage     259\n",
+       "GarageQual       81\n",
+       "GarageCond       81\n",
+       "GarageType       81\n",
+       "GarageFinish     81\n",
+       "GarageYrBlt      81\n",
+       "BsmtFinType2     38\n",
+       "BsmtExposure     38\n",
+       "BsmtCond         37\n",
+       "BsmtQual         37\n",
+       "BsmtFinType1     37\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 26,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "missing = df.isna().sum().sort_values(ascending=False)\n",
+    "missing = missing[missing > 0]\n",
+    "missing"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "b1aba18b-7ff4-4fcf-9bd1-bca8f8b8e224",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "FireplaceQu\n",
+       "Gd    380\n",
+       "TA    313\n",
+       "Fa     33\n",
+       "Ex     24\n",
+       "Po     20\n",
+       "Name: count, dtype: int64"
+      ]
+     },
+     "execution_count": 27,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df[\"FireplaceQu\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "id": "c2dcea1c-cc96-417b-be85-aac247817d69",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"FireplaceQu\"] = df[\"FireplaceQu\"].fillna(\"NA\")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "id": "7c7d888e-36e2-4607-adc6-f5be872ba9c4",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "FireplaceQu\n",
+       "NA    690\n",
+       "Gd    380\n",
+       "TA    313\n",
+       "Fa     33\n",
+       "Ex     24\n",
+       "Po     20\n",
+       "Name: count, dtype: int64"
+      ]
+     },
+     "execution_count": 29,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df[\"FireplaceQu\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "id": "09bab7f8-fd30-476f-ab2e-2ff5bedba618",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "LotFrontage\n",
+       "60.0     143\n",
+       "70.0      70\n",
+       "80.0      69\n",
+       "50.0      57\n",
+       "75.0      53\n",
+       "        ... \n",
+       "182.0      1\n",
+       "160.0      1\n",
+       "152.0      1\n",
+       "153.0      1\n",
+       "46.0       1\n",
+       "Name: count, Length: 110, dtype: int64"
+      ]
+     },
+     "execution_count": 30,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df[\"LotFrontage\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "id": "c01d9cdd-652f-4b67-853c-9f1f5c439d4a",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "RangeIndex: 1460 entries, 0 to 1459\n",
+      "Data columns (total 80 columns):\n",
+      " #   Column         Non-Null Count  Dtype  \n",
+      "---  ------         --------------  -----  \n",
+      " 0   Id             1460 non-null   int64  \n",
+      " 1   MSSubClass     1460 non-null   int64  \n",
+      " 2   MSZoning       1460 non-null   object \n",
+      " 3   LotFrontage    1201 non-null   float64\n",
+      " 4   LotArea        1460 non-null   int64  \n",
+      " 5   Street         1460 non-null   object \n",
+      " 6   Alley          1460 non-null   object \n",
+      " 7   LotShape       1460 non-null   object \n",
+      " 8   LandContour    1460 non-null   object \n",
+      " 9   Utilities      1460 non-null   object \n",
+      " 10  LotConfig      1460 non-null   object \n",
+      " 11  LandSlope      1460 non-null   object \n",
+      " 12  Neighborhood   1460 non-null   object \n",
+      " 13  Condition1     1460 non-null   object \n",
+      " 14  Condition2     1460 non-null   object \n",
+      " 15  BldgType       1460 non-null   object \n",
+      " 16  HouseStyle     1460 non-null   object \n",
+      " 17  OverallQual    1460 non-null   int64  \n",
+      " 18  OverallCond    1460 non-null   int64  \n",
+      " 19  YearBuilt      1460 non-null   int64  \n",
+      " 20  YearRemodAdd   1460 non-null   int64  \n",
+      " 21  RoofStyle      1460 non-null   object \n",
+      " 22  RoofMatl       1460 non-null   object \n",
+      " 23  Exterior1st    1460 non-null   object \n",
+      " 24  Exterior2nd    1460 non-null   object \n",
+      " 25  MasVnrType     1460 non-null   object \n",
+      " 26  MasVnrArea     1460 non-null   float64\n",
+      " 27  ExterQual      1460 non-null   object \n",
+      " 28  ExterCond      1460 non-null   object \n",
+      " 29  Foundation     1460 non-null   object \n",
+      " 30  BsmtQual       1423 non-null   object \n",
+      " 31  BsmtCond       1423 non-null   object \n",
+      " 32  BsmtExposure   1422 non-null   object \n",
+      " 33  BsmtFinType1   1423 non-null   object \n",
+      " 34  BsmtFinSF1     1460 non-null   int64  \n",
+      " 35  BsmtFinType2   1422 non-null   object \n",
+      " 36  BsmtFinSF2     1460 non-null   int64  \n",
+      " 37  BsmtUnfSF      1460 non-null   int64  \n",
+      " 38  TotalBsmtSF    1460 non-null   int64  \n",
+      " 39  Heating        1460 non-null   object \n",
+      " 40  HeatingQC      1460 non-null   object \n",
+      " 41  CentralAir     1460 non-null   object \n",
+      " 42  Electrical     1460 non-null   object \n",
+      " 43  1stFlrSF       1460 non-null   int64  \n",
+      " 44  2ndFlrSF       1460 non-null   int64  \n",
+      " 45  LowQualFinSF   1460 non-null   int64  \n",
+      " 46  GrLivArea      1460 non-null   int64  \n",
+      " 47  BsmtFullBath   1460 non-null   int64  \n",
+      " 48  BsmtHalfBath   1460 non-null   int64  \n",
+      " 49  FullBath       1460 non-null   int64  \n",
+      " 50  HalfBath       1460 non-null   int64  \n",
+      " 51  BedroomAbvGr   1460 non-null   int64  \n",
+      " 52  KitchenAbvGr   1460 non-null   int64  \n",
+      " 53  KitchenQual    1460 non-null   object \n",
+      " 54  TotRmsAbvGrd   1460 non-null   int64  \n",
+      " 55  Functional     1460 non-null   object \n",
+      " 56  Fireplaces     1460 non-null   int64  \n",
+      " 57  FireplaceQu    1460 non-null   object \n",
+      " 58  GarageType     1379 non-null   object \n",
+      " 59  GarageYrBlt    1379 non-null   float64\n",
+      " 60  GarageFinish   1379 non-null   object \n",
+      " 61  GarageCars     1460 non-null   int64  \n",
+      " 62  GarageArea     1460 non-null   int64  \n",
+      " 63  GarageQual     1379 non-null   object \n",
+      " 64  GarageCond     1379 non-null   object \n",
+      " 65  PavedDrive     1460 non-null   object \n",
+      " 66  WoodDeckSF     1460 non-null   int64  \n",
+      " 67  OpenPorchSF    1460 non-null   int64  \n",
+      " 68  EnclosedPorch  1460 non-null   int64  \n",
+      " 69  3SsnPorch      1460 non-null   int64  \n",
+      " 70  ScreenPorch    1460 non-null   int64  \n",
+      " 71  PoolArea       1460 non-null   int64  \n",
+      " 72  Fence          1460 non-null   object \n",
+      " 73  MiscFeature    1460 non-null   object \n",
+      " 74  MiscVal        1460 non-null   int64  \n",
+      " 75  MoSold         1460 non-null   int64  \n",
+      " 76  YrSold         1460 non-null   int64  \n",
+      " 77  SaleType       1460 non-null   object \n",
+      " 78  SaleCondition  1460 non-null   object \n",
+      " 79  SalePrice      1460 non-null   int64  \n",
+      "dtypes: float64(3), int64(35), object(42)\n",
+      "memory usage: 912.6+ KB\n"
+     ]
+    },
+    {
+     "ename": "AttributeError",
+     "evalue": "'NoneType' object has no attribute 'T'",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mAttributeError\u001b[0m                            Traceback (most recent call last)",
+      "Cell \u001b[1;32mIn[31], line 1\u001b[0m\n\u001b[1;32m----> 1\u001b[0m df\u001b[38;5;241m.\u001b[39minfo()\u001b[38;5;241m.\u001b[39mT\n",
+      "\u001b[1;31mAttributeError\u001b[0m: 'NoneType' object has no attribute 'T'"
+     ]
+    }
+   ],
+   "source": [
+    "df.info().T"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "id": "7be463d2-5069-4239-94d0-95afdfd02738",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"LotFrontage\"] = df.groupby(\"Neighborhood\")[\"LotFrontage\"].transform(\n",
+    "    lambda x: x.fillna(x.median())\n",
+    ")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "id": "d762fad8-fb37-4431-8432-5c53859a93f3",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "LotFrontage\n",
+       "60.0     152\n",
+       "80.0     112\n",
+       "70.0      94\n",
+       "65.0      74\n",
+       "73.0      70\n",
+       "        ... \n",
+       "138.0      1\n",
+       "152.0      1\n",
+       "88.5       1\n",
+       "153.0      1\n",
+       "46.0       1\n",
+       "Name: count, Length: 115, dtype: int64"
+      ]
+     },
+     "execution_count": 33,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df[\"LotFrontage\"].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 34,
+   "id": "dae20c5e-29a2-49eb-86d3-dcaa66b94341",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "GarageCond      81\n",
+       "GarageQual      81\n",
+       "GarageType      81\n",
+       "GarageFinish    81\n",
+       "GarageYrBlt     81\n",
+       "BsmtFinType2    38\n",
+       "BsmtExposure    38\n",
+       "BsmtCond        37\n",
+       "BsmtQual        37\n",
+       "BsmtFinType1    37\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 34,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "missing = df.isna().sum().sort_values(ascending=False)\n",
+    "missing = missing[missing > 0]\n",
+    "missing"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "id": "6de4b24a-cfe1-4216-8a18-553f7988ce8d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "garage_cols=[\n",
+    "    \"GarageCond\",\"GarageQual\",\"GarageType\",\"GarageFinish\"\n",
+    "]         \n",
+    "df[garage_cols]=df[garage_cols].fillna(\"None\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "id": "3c48e071-5065-4287-8be8-6fc593c2cf59",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "GarageYrBlt     81\n",
+       "BsmtFinType2    38\n",
+       "BsmtExposure    38\n",
+       "BsmtCond        37\n",
+       "BsmtQual        37\n",
+       "BsmtFinType1    37\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 36,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "missing = df.isna().sum().sort_values(ascending=False)\n",
+    "missing = missing[missing > 0]\n",
+    "missing"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "id": "c65975cc-1162-4da3-aa8d-1e5b051d9331",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df['GarageYrBlt'] = df['GarageYrBlt'].fillna(0)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "id": "18fdd1d3-706e-4438-8cb2-3911998638f6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "bsmt_cols = [\n",
+    "    'BsmtQual', 'BsmtCond', 'BsmtExposure', \n",
+    "    'BsmtFinType1', 'BsmtFinType2'\n",
+    "]\n",
+    "\n",
+    "df[bsmt_cols] = df[bsmt_cols].fillna('None')\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "id": "febe440d-cc52-48d4-ad6e-85586a5b8402",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Series([], dtype: int64)"
+      ]
+     },
+     "execution_count": 39,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "missing = df.isna().sum().sort_values(ascending=False)\n",
+    "missing = missing[missing > 0]\n",
+    "missing"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "id": "7b78e5ff-d694-4cb9-b767-e082340cfbd3",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "np.int64(0)"
+      ]
+     },
+     "execution_count": 40,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.isna().sum().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "id": "81163d5f-aab3-4b6b-88af-6432c397da54",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.preprocessing import OneHotEncoder\n",
+    "from sklearn.compose import ColumnTransformer"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "id": "5edc4770-d991-44ce-8816-38dfbcafbdfe",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "categorical_cols = df.select_dtypes(include=['object']).columns.tolist()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 48,
+   "id": "d950a25d-769b-4aac-a1cc-2a75390b90af",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "preprocessor = ColumnTransformer(\n",
+    "    transformers=[\n",
+    "        ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols)\n",
+    "    ],\n",
+    "    remainder='passthrough'\n",
+    ")\n",
+    "\n",
+    "X_encoded = preprocessor.fit_transform(df)\n",
+    "\n",
+    "ohe_feature_names = preprocessor.named_transformers_['cat'].get_feature_names_out(categorical_cols)\n",
+    "\n",
+    "numeric_cols = df.drop(columns=categorical_cols).columns.tolist()\n",
+    "\n",
+    "# Combine all column names\n",
+    "all_cols = list(ohe_feature_names) + numeric_cols\n",
+    "\n",
+    "# Turn it into a DataFrame\n",
+    "train_df = pd.DataFrame(X_encoded.toarray(), columns=all_cols)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "id": "673ae073-3ff5-47ed-b035-c0b02f97a313",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>MSZoning_C (all)</th>\n",
+       "      <th>MSZoning_FV</th>\n",
+       "      <th>MSZoning_RH</th>\n",
+       "      <th>MSZoning_RL</th>\n",
+       "      <th>MSZoning_RM</th>\n",
+       "      <th>Street_Grvl</th>\n",
+       "      <th>Street_Pave</th>\n",
+       "      <th>Alley_Grvl</th>\n",
+       "      <th>Alley_NA</th>\n",
+       "      <th>Alley_Pave</th>\n",
+       "      <th>...</th>\n",
+       "      <th>WoodDeckSF</th>\n",
+       "      <th>OpenPorchSF</th>\n",
+       "      <th>EnclosedPorch</th>\n",
+       "      <th>3SsnPorch</th>\n",
+       "      <th>ScreenPorch</th>\n",
+       "      <th>PoolArea</th>\n",
+       "      <th>MiscVal</th>\n",
+       "      <th>MoSold</th>\n",
+       "      <th>YrSold</th>\n",
+       "      <th>SalePrice</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>61.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>2008.0</td>\n",
+       "      <td>208500.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>...</td>\n",
+       "      <td>298.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>5.0</td>\n",
+       "      <td>2007.0</td>\n",
+       "      <td>181500.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>42.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>9.0</td>\n",
+       "      <td>2008.0</td>\n",
+       "      <td>223500.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>35.0</td>\n",
+       "      <td>272.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>2006.0</td>\n",
+       "      <td>140000.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>...</td>\n",
+       "      <td>192.0</td>\n",
+       "      <td>84.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>12.0</td>\n",
+       "      <td>2008.0</td>\n",
+       "      <td>250000.0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>5 rows × 301 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   MSZoning_C (all)  MSZoning_FV  MSZoning_RH  MSZoning_RL  MSZoning_RM  \\\n",
+       "0               0.0          0.0          0.0          1.0          0.0   \n",
+       "1               0.0          0.0          0.0          1.0          0.0   \n",
+       "2               0.0          0.0          0.0          1.0          0.0   \n",
+       "3               0.0          0.0          0.0          1.0          0.0   \n",
+       "4               0.0          0.0          0.0          1.0          0.0   \n",
+       "\n",
+       "   Street_Grvl  Street_Pave  Alley_Grvl  Alley_NA  Alley_Pave  ...  \\\n",
+       "0          0.0          1.0         0.0       1.0         0.0  ...   \n",
+       "1          0.0          1.0         0.0       1.0         0.0  ...   \n",
+       "2          0.0          1.0         0.0       1.0         0.0  ...   \n",
+       "3          0.0          1.0         0.0       1.0         0.0  ...   \n",
+       "4          0.0          1.0         0.0       1.0         0.0  ...   \n",
+       "\n",
+       "   WoodDeckSF  OpenPorchSF  EnclosedPorch  3SsnPorch  ScreenPorch  PoolArea  \\\n",
+       "0         0.0         61.0            0.0        0.0          0.0       0.0   \n",
+       "1       298.0          0.0            0.0        0.0          0.0       0.0   \n",
+       "2         0.0         42.0            0.0        0.0          0.0       0.0   \n",
+       "3         0.0         35.0          272.0        0.0          0.0       0.0   \n",
+       "4       192.0         84.0            0.0        0.0          0.0       0.0   \n",
+       "\n",
+       "   MiscVal  MoSold  YrSold  SalePrice  \n",
+       "0      0.0     2.0  2008.0   208500.0  \n",
+       "1      0.0     5.0  2007.0   181500.0  \n",
+       "2      0.0     9.0  2008.0   223500.0  \n",
+       "3      0.0     2.0  2006.0   140000.0  \n",
+       "4      0.0    12.0  2008.0   250000.0  \n",
+       "\n",
+       "[5 rows x 301 columns]"
+      ]
+     },
+     "execution_count": 49,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "train_df.head()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "id": "58355f46-e211-49ea-8be3-04073bdc80dc",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "np.int64(0)"
+      ]
+     },
+     "execution_count": 50,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "train_df.isna().sum().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 53,
+   "id": "49f09f81-93b2-4c43-bbc6-955f9a90f95c",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "((1460, 300), (1460,))"
+      ]
+     },
+     "execution_count": 53,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "X = train_df.drop(\"SalePrice\", axis=1)\n",
+    "Y = train_df[\"SalePrice\"]\n",
+    "\n",
+    "X.shape, Y.shape\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ad4d5e14-7873-4198-bf4c-a6ba9a067c0c",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.9"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
